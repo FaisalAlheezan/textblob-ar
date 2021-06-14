@@ -5,9 +5,8 @@ from collections import Counter
 class TextCorrection:
 
     def __init__(self):
-        wl1 = Counter(self.words(open('data/bbc-arabic-wordlist.csv').read()))
-        wl2 = Counter(self.words(open('data/OSAc-wordlist.csv').read()))
-        self.WORDS = wl1 + wl2
+
+        self.WORDS = wl1
 
     def words(self, text):
         return re.findall(r'\w+', text.lower())
@@ -17,11 +16,9 @@ class TextCorrection:
         N = sum(self.WORDS.values())
         return self.WORDS[word] / N
 
-    def correction(self, word, top=False):
+    def correction(self, word):
         "Most probable spelling correction for word."
-        if top:
-            return max(self.candidates(word), key=self.P)
-        return self.candidates(word)
+        return max(self.candidates(word), key=self.P)
 
     def candidates(self, word):
         "Generate possible spelling corrections for word."
@@ -33,7 +30,7 @@ class TextCorrection:
 
     def edits1(self, word):
         "All edits that are one edit away from `word`."
-        letters    = 'غظضذخثتشرقصفعسنملكيطحزوهدجبأ'
+        letters    = 'غظضذخثتشرقصفعسنملكيطحزوهدجبا'
         splits     = [(word[:i], word[i:])    for i in range(len(word) + 1)]
         deletes    = [L + R[1:]               for L, R in splits if R]
         transposes = [L + R[1] + R[0] + R[2:] for L, R in splits if len(R)>1]
